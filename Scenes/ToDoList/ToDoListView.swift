@@ -76,7 +76,7 @@ struct ToDoListView<ToDosResults: RandomAccessCollection>: View where ToDosResul
                             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                             .listRowBackground(Color(uiColor: .systemGroupedBackground))
                     } else {
-                        ForEach(Array(undoneToDos.enumerated()), id: \.element.id) { (index, undoneToDo) in
+                        ForEach(undoneToDos, id: \.id) { undoneToDo in
                             NavigationLink(value: undoneToDo) {
                                 renderToDoCard(undoneToDo)
                                     .buttonStyle(.plain)
@@ -101,7 +101,7 @@ struct ToDoListView<ToDosResults: RandomAccessCollection>: View where ToDosResul
                 
                 if doneToDos.count > 0 {
                     Section {
-                        ForEach(Array(doneToDos.enumerated()), id: \.element.id ) { (index, doneToDo) in
+                        ForEach(doneToDos, id: \.id ) { doneToDo in
                             NavigationLink(value: doneToDo) {
                                 renderToDoCard(doneToDo)
                                     .buttonStyle(.plain)
