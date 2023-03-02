@@ -56,10 +56,20 @@ struct EditToDoViewContainer: View {
             self.dueAt = todo.dueAt ?? .distantPast
             self.memo = todo.memo
         }
-        .onReceive(Just(title)) { newTitle in
-            let isNewTitleSameAsPrevious: Bool = newTitle == todo.title
+        .onReceive(
+            Just(title)
+                .combineLatest(
+                    Just(dueAt),
+                    Just(memo)
+                )
+        ) { newTitle, newDueAt, newMemo in
+            let isTitleChanged: Bool = newTitle != todo.title
             
-            shouldEnableSaveChangesButton = !isNewTitleSameAsPrevious
+            let isDueAtChanged: Bool = !Calendar.current.isDate(newDueAt, equalTo: todo.dueAt ?? .distantPast, toGranularity: .minute)
+            
+            let isMemoChanged: Bool = newMemo != todo.memo
+            
+            shouldEnableSaveChangesButton = isTitleChanged || isDueAtChanged || isMemoChanged
         }
     }
 }
