@@ -7,11 +7,14 @@ struct ToDoListViewContainer: View {
     
     @FetchRequest(
         entity: ToDo.entity(),
-        sortDescriptors: [.init(keyPath: \ToDo.createdAt, ascending: false)],
-        animation: .easeInOut
+        sortDescriptors: [.init(keyPath: \ToDo.createdAt, ascending: false)]
     ) var createdToDos: FetchedResults<ToDo>
     
     @State private var shouldShowCreateToDoViewSheet: Bool = false
+    
+    @State private var shouldShowToDoDetailView: Bool = false
+    
+    @State private var detailDisplayTargetToDo: ToDo? = nil
     
     func deleteTodo(_ todo: ToDo) -> Void {
         do {
@@ -37,6 +40,12 @@ struct ToDoListViewContainer: View {
         }
     }
     
+    func navigateToDetailView(todo: ToDo) -> Void {
+        self.detailDisplayTargetToDo = todo
+        
+        self.shouldShowToDoDetailView = true
+    }
+    
     func showCreateToDoViewSheet() -> Void {
         self.shouldShowCreateToDoViewSheet = true
     }
@@ -45,6 +54,7 @@ struct ToDoListViewContainer: View {
         ToDoListView(
             createdToDos: createdToDos
         )
+        .onTapToDoListCard(action: navigateToDetailView)
         .onDeleteToDo(action: deleteTodo)
         .onTapMarkAsDoneButton(action: toggleDoneStatus)
         .toolbar {
@@ -65,6 +75,16 @@ struct ToDoListViewContainer: View {
             NavigationView {
                 CreateToDoViewContainer()
                     .navigationBarTitleDisplayMode(.inline)
+            }
+        }
+        .background {
+            Group {
+                if let detailDisplayTargetToDo = detailDisplayTargetToDo {
+                    NavigationLink("", isActive: $shouldShowToDoDetailView) {
+                        ToDoDetailViewContainer(todo: detailDisplayTargetToDo)
+                    }
+                    .hidden()
+                }
             }
         }
     }
