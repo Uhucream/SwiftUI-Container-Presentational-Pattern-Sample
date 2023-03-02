@@ -70,21 +70,14 @@ struct ToDoListViewContainer: View {
                 }
             }
         }
+        .navigationDestination(for: ToDo.self) { todo in
+            ToDoDetailViewContainer(todo: todo)
+        }
         .navigationTitle("ToDo")
         .sheet(isPresented: $shouldShowCreateToDoViewSheet) {
             NavigationView {
                 CreateToDoViewContainer()
                     .navigationBarTitleDisplayMode(.inline)
-            }
-        }
-        .background {
-            Group {
-                if let detailDisplayTargetToDo = detailDisplayTargetToDo {
-                    NavigationLink("", isActive: $shouldShowToDoDetailView) {
-                        ToDoDetailViewContainer(todo: detailDisplayTargetToDo)
-                    }
-                    .hidden()
-                }
             }
         }
     }

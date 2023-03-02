@@ -77,28 +77,9 @@ struct ToDoListView<ToDosResults: RandomAccessCollection>: View where ToDosResul
                             .listRowBackground(Color(uiColor: .systemGroupedBackground))
                     } else {
                         ForEach(Array(undoneToDos.enumerated()), id: \.element.id) { (index, undoneToDo) in
-                            HStack {
+                            NavigationLink(value: undoneToDo) {
                                 renderToDoCard(undoneToDo)
-                                
-                                Spacer()
-                            }
-                            .buttonStyle(.plain)
-                            .background {
-                                //  disclosureIndicator 表示用の ダミー NavigationLink
-                                NavigationLink(destination: EmptyView(), isActive: .constant(false)) {
-                                    Color.clear
-                                }
-                            }
-                            .overlay {
-                                //  タップしたときのエフェクト表示用
-                                Button("") {
-                                    Task {
-                                        //  ある程度待たないとアニメーションなしで遷移してしまう
-                                        try? await Task.sleep(until: .now + .milliseconds(80), clock: .continuous)
-
-                                        onTapToDoListCardCallback?(undoneToDo)
-                                    }
-                                }
+                                    .buttonStyle(.plain)
                             }
                         }
                         .onDelete { deleteTargetsOffsets in
@@ -121,28 +102,9 @@ struct ToDoListView<ToDosResults: RandomAccessCollection>: View where ToDosResul
                 if doneToDos.count > 0 {
                     Section {
                         ForEach(Array(doneToDos.enumerated()), id: \.element.id ) { (index, doneToDo) in
-                            HStack {
+                            NavigationLink(value: doneToDo) {
                                 renderToDoCard(doneToDo)
-                                
-                                Spacer()
-                            }
-                            .buttonStyle(.plain)
-                            .background {
-                                //  disclosureIndicator 表示用の ダミー NavigationLink
-                                NavigationLink(destination: EmptyView(), isActive: .constant(false)) {
-                                    Color.clear
-                                }
-                            }
-                            .overlay {
-                                //  タップしたときのエフェクト表示用
-                                Button("") {
-                                    Task {
-                                        //  ある程度待たないとアニメーションなしで遷移してしまう
-                                        try? await Task.sleep(until: .now + .milliseconds(80), clock: .continuous)
-
-                                        onTapToDoListCardCallback?(doneToDo)
-                                    }
-                                }
+                                    .buttonStyle(.plain)
                             }
                         }
                         .onDelete { deleteTargetsOffsets in
