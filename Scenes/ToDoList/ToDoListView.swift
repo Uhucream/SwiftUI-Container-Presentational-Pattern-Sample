@@ -9,8 +9,6 @@ struct ToDoListView<ToDosResults: RandomAccessCollection>: View where ToDosResul
     
     @State private var linkOpacity: Double = 1.0
     
-    private(set) var onTapToDoListCardCallback: ((ToDo) -> Void)?
-    
     private(set) var onTapMarkAsDoneButtonCallback: ((ToDo) -> Void)?
     
     private(set) var onDeleteToDoCallback: ((ToDo) -> Void)?
@@ -31,14 +29,6 @@ struct ToDoListView<ToDosResults: RandomAccessCollection>: View where ToDosResul
                 onTapMarkAsDoneButtonCallback?(createdToDo)
             }
         )
-    }
-    
-    func onTapToDoListCard(action: @escaping (ToDo) -> Void) -> Self {
-        var view = self
-        
-        view.onTapToDoListCardCallback = action
-        
-        return view
     }
     
     func onTapMarkAsDoneButton(action: @escaping (ToDo) -> Void) -> Self {

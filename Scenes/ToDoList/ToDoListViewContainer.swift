@@ -12,10 +12,6 @@ struct ToDoListViewContainer: View {
     
     @State private var shouldShowCreateToDoViewSheet: Bool = false
     
-    @State private var shouldShowToDoDetailView: Bool = false
-    
-    @State private var detailDisplayTargetToDo: ToDo? = nil
-    
     func deleteTodo(_ todo: ToDo) -> Void {
         do {
             viewContext.delete(todo)
@@ -40,12 +36,6 @@ struct ToDoListViewContainer: View {
         }
     }
     
-    func navigateToDetailView(todo: ToDo) -> Void {
-        self.detailDisplayTargetToDo = todo
-        
-        self.shouldShowToDoDetailView = true
-    }
-    
     func showCreateToDoViewSheet() -> Void {
         self.shouldShowCreateToDoViewSheet = true
     }
@@ -54,7 +44,6 @@ struct ToDoListViewContainer: View {
         ToDoListView(
             createdToDos: createdToDos
         )
-        .onTapToDoListCard(action: navigateToDetailView)
         .onDeleteToDo(action: deleteTodo)
         .onTapMarkAsDoneButton(action: toggleDoneStatus)
         .toolbar {
