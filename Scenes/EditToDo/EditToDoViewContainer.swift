@@ -16,13 +16,21 @@ struct EditToDoViewContainer: View {
     
     var todo: ToDo
     
-    @State private var title: String = ""
+    @State private var title: String
     
-    @State private var dueAt: Date = .now
+    @State private var dueAt: Date
     
-    @State private var memo: String = ""
+    @State private var memo: String
     
     @State private var shouldEnableSaveChangesButton: Bool = false
+    
+    init(todo: ToDo) {
+        self.todo = todo
+        
+        _title = .init(initialValue: todo.title)
+        _dueAt = .init(initialValue: todo.dueAt ?? .distantPast)
+        _memo = .init(initialValue: todo.memo)
+    }
     
     func updateToDo() -> Void {
         do {
@@ -50,11 +58,6 @@ struct EditToDoViewContainer: View {
             updateToDo()
             
             dismiss()
-        }
-        .onAppear {
-            self.title = todo.title
-            self.dueAt = todo.dueAt ?? .distantPast
-            self.memo = todo.memo
         }
         .onReceive(
             Just(title)
