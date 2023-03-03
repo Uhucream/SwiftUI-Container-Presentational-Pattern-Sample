@@ -12,9 +12,18 @@ struct ToDoListViewContainer: View {
     
     @State private var shouldShowCreateToDoViewSheet: Bool = false
     
-    func deleteTodo(_ todo: ToDo) -> Void {
+    func deleteTodos(_ targetsOffsets: IndexSet) -> Void {
         do {
-            viewContext.delete(todo)
+            let deleteTargets: [ToDo] = targetsOffsets
+                .map { targetOffset in
+                    return createdToDos[targetOffset]
+                }
+            
+            deleteTargets
+                .forEach { deleteTarget in
+                    viewContext.delete(deleteTarget)
+                }
+            
             
             try viewContext.save()
             
@@ -44,7 +53,7 @@ struct ToDoListViewContainer: View {
         ToDoListView(
             createdToDos: createdToDos
         )
-        .onDeleteToDo(action: deleteTodo)
+        .onDeleteToDos(action: deleteTodos)
         .onTapMarkAsDoneButton(action: toggleDoneStatus)
         .toolbar {
             ToolbarItemGroup(placement: .primaryAction) {

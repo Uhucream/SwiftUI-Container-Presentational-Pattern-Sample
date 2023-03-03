@@ -5,7 +5,7 @@ struct ToDoListView<ToDosResults: RandomAccessCollection>: View where ToDosResul
     
     private(set) var onTapMarkAsDoneButtonCallback: ((ToDo) -> Void)?
     
-    private(set) var onDeleteToDoCallback: ((ToDo) -> Void)?
+    private(set) var onDeleteToDosCallback: ((IndexSet) -> Void)?
     
     var createdToDos: ToDosResults
     
@@ -29,10 +29,10 @@ struct ToDoListView<ToDosResults: RandomAccessCollection>: View where ToDosResul
         return view
     }
     
-    func onDeleteToDo(action: @escaping (ToDo) -> Void) -> Self {
+    func onDeleteToDos(action: @escaping (IndexSet) -> Void) -> Self {
         var view = self
         
-        view.onDeleteToDoCallback = action
+        view.onDeleteToDosCallback = action
         
         return view
     }
@@ -44,64 +44,16 @@ struct ToDoListView<ToDosResults: RandomAccessCollection>: View where ToDosResul
                 .background(Color(uiColor: .systemGroupedBackground))
                 .edgesIgnoringSafeArea(.all)
         } else {
-            let undoneToDos: [ToDo] = createdToDos.filter { todo in !todo.isDone }
-            
-            let doneToDos: [ToDo] = createdToDos.filter { todo in todo.isDone }
-            
             List {
                 Section {
-                    if undoneToDos.count == 0 {
-                        Text("未完了の項目はありません")
-                            .foregroundColor(.gray)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-                            .listRowBackground(Color(uiColor: .systemGroupedBackground))
-                    } else {
-                        ForEach(undoneToDos, id: \.id) { undoneToDo in
-                            NavigationLink(value: undoneToDo) {
-                                renderToDoCard(undoneToDo)
-                                    .buttonStyle(.plain)
-                            }
-                        }
-                        .onDelete { deleteTargetsOffsets in
-                            let deleteTargets: [ToDo] = deleteTargetsOffsets
-                                .map { offset in
-                                    return undoneToDos[offset]
-                                }
-                            
-                            deleteTargets
-                                .forEach { deleteTarget in
-                                    onDeleteToDoCallback?(deleteTarget)
-                                }
+                    ForEach(createdToDos, id: \.id) { todo in
+                        NavigationLink(value: todo) {
+                            renderToDoCard(todo)
+                                .buttonStyle(.plain)
+                                .opacity(todo.isDone ? 0.5 : 1)
                         }
                     }
-                } header: {
-                    Text("未完了の項目")
-                        .font(.footnote)
-                }
-                
-                if doneToDos.count > 0 {
-                    Section {
-                        ForEach(doneToDos, id: \.id ) { doneToDo in
-                            NavigationLink(value: doneToDo) {
-                                renderToDoCard(doneToDo)
-                                    .buttonStyle(.plain)
-                            }
-                        }
-                        .onDelete { deleteTargetsOffsets in
-                            let deleteTargets: [ToDo] = deleteTargetsOffsets
-                                .map { offset in
-                                    return doneToDos[offset]
-                                }
-                            
-                            deleteTargets
-                                .forEach { deleteTarget in
-                                    onDeleteToDoCallback?(deleteTarget)
-                                }
-                        }
-                    } header: {
-                        Text("実行済みの項目")
-                            .font(.footnote)
-                    }
+                    .onDelete(perform: onDeleteToDosCallback)
                 }
             }
             .listStyle(.insetGrouped)
