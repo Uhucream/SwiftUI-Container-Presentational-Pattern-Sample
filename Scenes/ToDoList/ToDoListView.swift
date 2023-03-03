@@ -3,19 +3,9 @@ import CoreData
 
 struct ToDoListView<ToDosResults: RandomAccessCollection>: View where ToDosResults.Element ==  ToDo {
     
-    @Environment(\.editMode) var editMode
-    
-    @State private var shouldShowDoneToDos: Bool = false
-    
-    @State private var linkOpacity: Double = 1.0
-    
     private(set) var onTapMarkAsDoneButtonCallback: ((ToDo) -> Void)?
     
     private(set) var onDeleteToDoCallback: ((ToDo) -> Void)?
-    
-    private var isEditingMode: Bool {
-        return editMode?.wrappedValue.isEditing ?? false
-    }
     
     var createdToDos: ToDosResults
     
