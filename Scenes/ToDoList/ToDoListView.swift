@@ -3,6 +3,15 @@ import CoreData
 
 struct ToDoListView<ToDosResults: RandomAccessCollection>: View where ToDosResults.Element ==  ToDo {
     
+    private var dateFormatter: DateFormatter {
+        let formatter: DateFormatter = .init()
+        
+        formatter.dateStyle = .short
+        formatter.timeStyle = .none
+        
+        return formatter
+    }
+    
     private(set) var onTapMarkAsDoneButtonCallback: ((ToDo) -> Void)?
     
     private(set) var onDeleteToDosCallback: ((IndexSet) -> Void)?
@@ -14,7 +23,7 @@ struct ToDoListView<ToDosResults: RandomAccessCollection>: View where ToDosResul
         ToDoListCard(
             todo: createdToDo,
             todoTitle: createdToDo.title,
-            dueAtDate: createdToDo.dueAt ?? .distantPast,
+            dueAtDateString: dateFormatter.string(from: createdToDo.dueAt ?? .distantPast),
             onTapMarkAsDoneButton: {
                 onTapMarkAsDoneButtonCallback?(createdToDo)
             }

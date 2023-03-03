@@ -12,19 +12,10 @@ struct ToDoListCard: View {
     
     @Environment(\.editMode) var editMode
     
-    private var dateFormatter: DateFormatter {
-        let formatter: DateFormatter = .init()
-        
-        formatter.dateStyle = .short
-        formatter.timeStyle = .none
-        
-        return formatter
-    }
-    
     @ObservedObject var todo: ToDo
     
     var todoTitle: String
-    var dueAtDate: Date
+    var dueAtDateString: String
     
     var onTapMarkAsDoneButton: (() -> Void)?
     
@@ -55,7 +46,7 @@ struct ToDoListCard: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(todoTitle)
                 
-                Text("期日: \(dateFormatter.string(from: dueAtDate))")
+                Text("期日: \(dueAtDateString)")
                     .font(.caption)
             }
         }
@@ -64,10 +55,19 @@ struct ToDoListCard: View {
 
 struct ToDoListCard_Previews: PreviewProvider {
     static var previews: some View {
+        let dateFormatter: DateFormatter = {
+            let formatter: DateFormatter = .init()
+            
+            formatter.dateStyle = .short
+            formatter.timeStyle = .none
+            
+            return formatter
+        }()
+        
         ToDoListCard(
             todo: mockToDos[0],
             todoTitle: "プレビューTodo",
-            dueAtDate: .now.addingTimeInterval(10000)
+            dueAtDateString: dateFormatter.string(from: .now.addingTimeInterval(10000))
         )
         .previewLayout(.sizeThatFits)
     }
