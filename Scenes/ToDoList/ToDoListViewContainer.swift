@@ -12,9 +12,18 @@ struct ToDoListViewContainer: View {
     
     @State private var shouldShowCreateToDoViewSheet: Bool = false
     
-    func deleteTodo(_ todo: ToDo) -> Void {
+    func deleteTodo(_ targetsOffsets: IndexSet) -> Void {
         do {
-            viewContext.delete(todo)
+            let deleteTargets: [ToDo] = targetsOffsets
+                .map { targetOffset in
+                    return createdToDos[targetOffset]
+                }
+            
+            deleteTargets
+                .forEach { deleteTarget in
+                    viewContext.delete(deleteTarget)
+                }
+            
             
             try viewContext.save()
             
