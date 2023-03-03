@@ -49,6 +49,7 @@ struct ToDoListView<ToDosResults: RandomAccessCollection>: View where ToDosResul
                     ForEach(createdToDos, id: \.id) { todo in
                         NavigationLink(value: todo) {
                             renderToDoCard(todo)
+                                //  .buttonStyle の指定がないと、完了ボタン押下時に行ごと反応してしまう
                                 .buttonStyle(.plain)
                                 .opacity(todo.isDone ? 0.5 : 1)
                         }
