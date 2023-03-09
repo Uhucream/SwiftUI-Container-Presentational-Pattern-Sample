@@ -12,8 +12,7 @@ struct ToDoListCard: View {
     
     @Environment(\.editMode) var editMode
     
-    @ObservedObject var todo: ToDo
-    
+    var isDone: Bool
     var todoTitle: String
     var dueAtDateString: String
     
@@ -28,7 +27,7 @@ struct ToDoListCard: View {
                     }
                 ) {
                     ZStack {
-                        if todo.isDone {
+                        if isDone {
                             Image(systemName: "checkmark.circle.fill")
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
@@ -38,7 +37,7 @@ struct ToDoListCard: View {
                                 .aspectRatio(contentMode: .fit)
                         }
                     }
-                    .foregroundColor(todo.isDone ? .accentColor : .gray)
+                    .foregroundColor(isDone ? .accentColor : .gray)
                     .frame(maxHeight: 24)
                 }
             }
@@ -65,7 +64,7 @@ struct ToDoListCard_Previews: PreviewProvider {
         }()
         
         ToDoListCard(
-            todo: mockToDos[0],
+            isDone: false,
             todoTitle: "プレビューTodo",
             dueAtDateString: dateFormatter.string(from: .now.addingTimeInterval(10000))
         )

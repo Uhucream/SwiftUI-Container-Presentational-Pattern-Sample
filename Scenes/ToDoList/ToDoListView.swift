@@ -21,13 +21,14 @@ struct ToDoListView<ToDosResults: RandomAccessCollection>: View where ToDosResul
     @ViewBuilder
     func renderToDoCard(_ createdToDo: ToDo) -> some View {
         ToDoListCard(
-            todo: createdToDo,
+            isDone: createdToDo.isDone,
             todoTitle: createdToDo.title,
             dueAtDateString: dateFormatter.string(from: createdToDo.dueAt ?? .distantPast),
             onTapMarkAsDoneButton: {
                 onTapMarkAsDoneButtonCallback?(createdToDo)
             }
         )
+        .id("\(createdToDo.id)\(createdToDo.isDone)")
     }
     
     func onTapMarkAsDoneButton(action: @escaping (ToDo) -> Void) -> Self {
