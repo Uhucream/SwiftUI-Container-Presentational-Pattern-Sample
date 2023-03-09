@@ -28,6 +28,7 @@ struct ToDoListView<ToDosResults: RandomAccessCollection>: View where ToDosResul
                 onTapMarkAsDoneButtonCallback?(createdToDo)
             }
         )
+        //  MARK: ↓ 完了ボタン押下後に再レンダリングをかけたいので必要
         .id("\(createdToDo.id)\(createdToDo.isDone)")
     }
     
